@@ -21,9 +21,8 @@ fn main() -> Result<(), anyhow::Error> {
 
     // we use a custom threadpool to improve speed
     let pool = rayon::ThreadPoolBuilder::new()
-        .num_threads(256)
-        .build()
-        .unwrap();
+        .num_threads(rayon::current_num_threads())
+        .build()?;
 
     // pool.install is required to use our custom threadpool, instead of rayon's default one
     pool.install(|| {

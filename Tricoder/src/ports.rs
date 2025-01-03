@@ -1,6 +1,8 @@
 use std::net::{SocketAddr, TcpStream, ToSocketAddrs};
 use std::time::Duration;
 
+use rayon::iter::{IntoParallelIterator, ParallelIterator};
+
 use crate::common_ports::MOST_COMMON_PORTS_100;
 use crate::model::{Port, SubDomain};
 
@@ -15,7 +17,7 @@ pub fn scan_ports(mut subdomain: SubDomain) -> SubDomain {
     }
 
     subdomain.open_ports = MOST_COMMON_PORTS_100
-        .into_iter()
+        .into_par_iter()
         .map(|port| scan_port(socket_addresses[0], *port))
         .filter(|port| port.is_open) // filter closed ports
         .collect();
